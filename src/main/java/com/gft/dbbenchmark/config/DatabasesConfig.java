@@ -1,35 +1,35 @@
 package com.gft.dbbenchmark.config;
 
+import com.gft.dbbenchmark.dao.TownDao;
+import com.gft.dbbenchmark.service.TownService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"com.gft.dbbenchmark.repo"})
+//@EnableJpaRepositories(basePackages = {"com.gft.dbbenchmark.repo"})
 public class DatabasesConfig {
 
     private final Environment env;
 
     @Autowired
-    public DatabasesConfig(Environment env){
+    public DatabasesConfig(Environment env) {
         this.env = env;
+    }
+
+    @Bean
+    public TownService townService() {
+        return new TownService(new TownDao(clientDatasource()));
     }
 
     private DataSource mySqlDataSource() {
