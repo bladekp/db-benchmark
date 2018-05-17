@@ -1,5 +1,6 @@
 package com.gft.dbbenchmark.controller;
 
+import com.gft.dbbenchmark.config.ClientDatabaseContextHolder;
 import com.gft.dbbenchmark.model.Town;
 import com.gft.dbbenchmark.repo.TownRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,12 @@ public class BenchmarkController {
 
     @RequestMapping(value="/benchmark/report", method = RequestMethod.GET, produces = "application/json")
     public String prepareBenchmarkReport(){
-        townRepo.save(Town.builder().name("Warsaw").population(1700000L).build());
+        ClientDatabaseContextHolder.set(ClientDatabaseContextHolder.ClientDatabaseEnum.MYSQL);
+        townRepo.save(Town.builder().name("Warsaw").population(1800000L).build());
+        ClientDatabaseContextHolder.clear();
+        ClientDatabaseContextHolder.set(ClientDatabaseContextHolder.ClientDatabaseEnum.H2);
+        townRepo.save(Town.builder().name("Cracow").population(750000L).build());
+        ClientDatabaseContextHolder.clear();
         return "{}";
     }
 }

@@ -16,7 +16,7 @@ public class ClientDatabaseContextHolder {
         CONTEXT.remove();
     }
 
-    private enum ClientDatabaseEnum {
+    public enum ClientDatabaseEnum {
         MYSQL, H2
     }
 }
