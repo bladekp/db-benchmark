@@ -14,10 +14,10 @@ public class TownService {
         this.townDao = townDao;
     }
 
-    public String getFirstTownName(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb){
+    public Town getOne(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb, Long id){
         ClientDatabaseContextHolder.set(clientDb);
-        Town town = this.townDao.getFirst();
+        Town town = this.townDao.getOne(id);
         ClientDatabaseContextHolder.clear();
-        return town.getName();
+        return town;
     }
 }

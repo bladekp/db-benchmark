@@ -1,6 +1,7 @@
 package com.gft.dbbenchmark.controller;
 
 import com.gft.dbbenchmark.config.ClientDatabaseContextHolder;
+import com.gft.dbbenchmark.model.Town;
 import com.gft.dbbenchmark.service.TownService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +20,8 @@ public class BenchmarkController {
 
     @RequestMapping(value="/benchmark/report", method = RequestMethod.GET)//, produces = "application/json")
     public String prepareBenchmarkReport(){
-        String h2 = townService.getFirstTownName(ClientDatabaseContextHolder.ClientDatabaseEnum.H2);
-        String mysql = townService.getFirstTownName(ClientDatabaseContextHolder.ClientDatabaseEnum.MYSQL);
+        Town h2 = townService.getOne(ClientDatabaseContextHolder.ClientDatabaseEnum.H2,1L);
+        Town mysql = townService.getOne(ClientDatabaseContextHolder.ClientDatabaseEnum.MYSQL, 1L);
         return "H2: " + h2 + " MYSQL: "+ mysql;
     }
 }

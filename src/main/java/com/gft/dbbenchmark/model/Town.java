@@ -2,7 +2,7 @@ package com.gft.dbbenchmark.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Table
 @Builder
 @Getter
+@ToString
 public class Town {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
