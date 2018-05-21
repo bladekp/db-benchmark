@@ -34,4 +34,13 @@ public class TownService {
         townDao.clearAll();
         ClientDatabaseContextHolder.clear();
     }
+
+    public long executeBenchmark(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb, String query){
+        ClientDatabaseContextHolder.set(clientDb);
+        long startTime = System.currentTimeMillis();
+        townDao.execute(query);
+        long duration = System.currentTimeMillis() - startTime;
+        ClientDatabaseContextHolder.clear();
+        return duration;
+    }
 }

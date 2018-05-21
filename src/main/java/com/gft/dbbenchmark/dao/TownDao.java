@@ -55,4 +55,8 @@ public class TownDao {
         jdbcTemplate.update("DELETE FROM town");
     }
 
+    public void execute(String query) {
+        jdbcTemplate.execute(query);
+    }
+
 }
