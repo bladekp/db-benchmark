@@ -5,7 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-    <span th:text="'H2' + ${h2time}"></span>
-    <span th:text="'MYSQL' + ${mysqltime}"></span>
+    <tr th:each="dbTime : ${timeMap}">
+        <td th:text="${dbTime.key}"></td>
+        <td th:text="${dbTime.value}"></td>
+    </tr>
 </body>
 </html>
