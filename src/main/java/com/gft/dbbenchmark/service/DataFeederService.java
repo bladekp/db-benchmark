@@ -23,11 +23,14 @@ public class DataFeederService {
 
     @PostConstruct
     public void initialize() {
-        townService.clearAll(ClientDatabaseContextHolder.ClientDatabaseEnum.H2);
-        townService.clearAll(ClientDatabaseContextHolder.ClientDatabaseEnum.MYSQL);
         List<Town> townList = createRandomTowns();
-        townService.saveAll(ClientDatabaseContextHolder.ClientDatabaseEnum.H2, townList);
-        townService.saveAll(ClientDatabaseContextHolder.ClientDatabaseEnum.MYSQL, townList);
+        initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum.H2, townList);
+        initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum.MYSQL, townList);
+    }
+
+    private void initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum clientDatabase, List<Town> townList) {
+        townService.clearAll(clientDatabase);
+        townService.saveAll(clientDatabase, townList);
     }
 
     private List<Town> createRandomTowns() {
