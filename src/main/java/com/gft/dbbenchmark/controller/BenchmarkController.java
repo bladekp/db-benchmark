@@ -2,6 +2,8 @@ package com.gft.dbbenchmark.controller;
 
 import com.gft.dbbenchmark.config.ClientDatabaseContextHolder;
 import com.gft.dbbenchmark.service.TownService;
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,28 +33,50 @@ public class BenchmarkController {
 
     @RequestMapping(value = "/benchmark", method = RequestMethod.POST, produces = "application/json")
     public String prepareBenchmarkReport(HttpServletRequest request, Model model) {
-        final String query = request.getParameter("sql");
-        Map<ClientDatabaseContextHolder.ClientDatabaseEnum, Long> timeMap = IntStream
+        model.addAttribute("timeMap", executeBenchmark( request.getParameter("sql")));
+        return "benchmark-report";
+    }
+
+    private Map<ClientDatabaseContextHolder.ClientDatabaseEnum, BenchmarkStatistics> executeBenchmark(final String query){
+        return IntStream
                 .range(0, TEST_COUNT)
                 .mapToObj((i) -> {
-                    Map<ClientDatabaseContextHolder.ClientDatabaseEnum, Long> map = new HashMap<>();
+                    Map<ClientDatabaseContextHolder.ClientDatabaseEnum, BenchmarkStatistics> map = new HashMap<>();
                     for (ClientDatabaseContextHolder.ClientDatabaseEnum db : ClientDatabaseContextHolder.ClientDatabaseEnum.values()) {
-                        map.put(db, townService.executeBenchmark(db, query));
+                        map.put(db, new BenchmarkStatistics(1, townService.executeBenchmark(db, query)));
                     }
                     return map;
                 })
                 .reduce(
                         (map1, map2) -> {
                             for (ClientDatabaseContextHolder.ClientDatabaseEnum db : ClientDatabaseContextHolder.ClientDatabaseEnum.values()) {
-                                Long map1db = map1.get(db);
-                                Long map2db = map2.get(db);
-                                map1.put(db, map1db + map2db);
+                                BenchmarkStatistics benchmark1 = map1.get(db);
+                                BenchmarkStatistics benchmark2 = map2.get(db);
+                                map1.put(db,
+                                        new BenchmarkStatistics(benchmark1.totalOperations + benchmark2.totalOperations, benchmark1.totalOperationsTime + benchmark2.totalOperationsTime)
+                                );
                             }
                             return map1;
                         }
                 )
                 .get();
-        model.addAttribute("timeMap", timeMap);
-        return "benchmark-report";
+    }
+
+    @ToString
+    private class BenchmarkStatistics{
+        private final long totalOperations;
+        private final long totalOperationsTime;
+        private final double operationsPerSecond;
+
+        private BenchmarkStatistics(long totalOperations, long totalOperationsTime){
+            this.totalOperations = totalOperations;
+            this.totalOperationsTime = totalOperationsTime;
+            double seconds = totalOperationsTime / 1000.0;
+            if (seconds > 0L) {
+                this.operationsPerSecond = totalOperations / seconds;
+            }  else {
+                this.operationsPerSecond = Double.MAX_VALUE;
+            }
+        }
     }
 }

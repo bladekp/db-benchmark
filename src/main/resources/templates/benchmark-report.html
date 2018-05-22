@@ -5,9 +5,19 @@
     <title>Title</title>
 </head>
 <body>
-    <tr th:each="dbTime : ${timeMap}">
-        <td th:text="${dbTime.key}"></td>
-        <td th:text="${dbTime.value}"></td>
-    </tr>
+    <table>
+        <thead>
+            <tr>
+                <td>Database</td>
+                <td>Statistics</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="dbTime : ${timeMap}">
+                <td th:text="${dbTime.key}"></td>
+                <td th:text="${dbTime.value}"></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
