@@ -1,7 +1,8 @@
 package com.gft.dbbenchmark.service;
 
 import com.gft.dbbenchmark.config.ClientDatabaseContextHolder;
-import com.gft.dbbenchmark.dao.TownDao;
+import com.gft.dbbenchmark.dao.TownDaoJdbc;
+import com.gft.dbbenchmark.dao.TownDaoMongo;
 import com.gft.dbbenchmark.model.Town;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,38 +10,52 @@ import java.util.List;
 
 public class TownService {
 
-    private TownDao townDao;
+    private final TownDaoJdbc townDaoJdbc;
+    private final TownDaoMongo townDaoMongo;
 
     @Autowired
-    public TownService(TownDao townDao){
-        this.townDao = townDao;
+    public TownService(TownDaoJdbc townDaoJdbc, TownDaoMongo townDaoMongo){
+        this.townDaoJdbc = townDaoJdbc;
+        this.townDaoMongo = townDaoMongo;
     }
 
     public Town getOne(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb, Long id){
-        ClientDatabaseContextHolder.set(clientDb);
-        Town town = townDao.getOne(id);
-        ClientDatabaseContextHolder.clear();
-        return town;
+        if (clientDb != ClientDatabaseContextHolder.ClientDatabaseEnum.MONGO) {
+            ClientDatabaseContextHolder.set(clientDb);
+            Town town = townDaoJdbc.getOne(id);
+            ClientDatabaseContextHolder.clear();
+            return town;
+        } else {
+            return null;
+        }
     }
 
     public void saveAll(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb, List<Town> townList){
-        ClientDatabaseContextHolder.set(clientDb);
-        townDao.saveAll(townList);
-        ClientDatabaseContextHolder.clear();
+        if (clientDb != ClientDatabaseContextHolder.ClientDatabaseEnum.MONGO) {
+            ClientDatabaseContextHolder.set(clientDb);
+            townDaoJdbc.saveAll(townList);
+            ClientDatabaseContextHolder.clear();
+        }
     }
 
     public void clearAll(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb){
-        ClientDatabaseContextHolder.set(clientDb);
-        townDao.clearAll();
-        ClientDatabaseContextHolder.clear();
+        if (clientDb != ClientDatabaseContextHolder.ClientDatabaseEnum.MONGO) {
+            ClientDatabaseContextHolder.set(clientDb);
+            townDaoJdbc.clearAll();
+            ClientDatabaseContextHolder.clear();
+        }
     }
 
     public long executeBenchmark(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb, String query){
-        ClientDatabaseContextHolder.set(clientDb);
-        long startTime = System.currentTimeMillis();
-        townDao.execute(query);
-        long duration = System.currentTimeMillis() - startTime;
-        ClientDatabaseContextHolder.clear();
-        return duration;
+        if (clientDb != ClientDatabaseContextHolder.ClientDatabaseEnum.MONGO) {
+            ClientDatabaseContextHolder.set(clientDb);
+            long startTime = System.currentTimeMillis();
+            townDaoJdbc.execute(query);
+            long duration = System.currentTimeMillis() - startTime;
+            ClientDatabaseContextHolder.clear();
+            return duration;
+        } else {
+            return 0;
+        }
     }
 }

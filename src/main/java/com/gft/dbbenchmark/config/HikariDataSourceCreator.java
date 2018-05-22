@@ -21,9 +21,20 @@ public class HikariDataSourceCreator {
 
     DataSource createDataSource(String configNamespace) {
         HikariConfig dataSourceConfig = new HikariConfig();
-        dataSourceConfig.setJdbcUrl(env.getRequiredProperty(configNamespace + ".url"));
-        dataSourceConfig.setUsername(env.getRequiredProperty(configNamespace + ".username"));
-        dataSourceConfig.setPassword(env.getRequiredProperty(configNamespace + ".password"));
+        String url = env.getRequiredProperty(configNamespace + ".url");
+        String username = env.getProperty(configNamespace + ".username");
+        String password = env.getProperty(configNamespace + ".password");
+        String driver = env.getProperty(configNamespace + ".driver-class-name");
+        dataSourceConfig.setJdbcUrl(url);
+        if (username != null) {
+            dataSourceConfig.setUsername(username);
+        }
+        if (password != null) {
+            dataSourceConfig.setPassword(password);
+        }
+        if (driver != null) {
+            dataSourceConfig.setDriverClassName(driver);
+        }
         return new HikariDataSource(dataSourceConfig);
     }
 }
