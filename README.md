@@ -17,10 +17,5 @@
     
 # Todo
 
-* Unit tests, spock
-* PostgreSQL db config
-* Mongodb config
-* Thymeleaf report
+* Unit tests
 * Integration tests with Roboto
-* Spring Security
-* Gerrit

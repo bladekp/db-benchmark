@@ -17,6 +17,6 @@ public class ClientDatabaseContextHolder {
     }
 
     public enum ClientDatabaseEnum {
-        MYSQL, H2, MONGO
+        MYSQL, H2, MONGO, POSTGRESQL
     }
 }

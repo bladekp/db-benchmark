@@ -26,6 +26,7 @@ public class DataFeederService {
         List<Town> townList = createRandomTowns();
         initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum.H2, townList);
         initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum.MYSQL, townList);
+        initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum.POSTGRESQL, townList);
     }
 
     private void initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum clientDatabase, List<Town> townList) {

@@ -32,9 +32,10 @@ public class DatabasesConfig {
 
         DataSource mySqlDataSource = dataSourceCreator.createDataSource("mysql.datasource");
         DataSource h2DataSource = dataSourceCreator.createDataSource("h2.datasource");
-
+        DataSource postgresqlDataSource = dataSourceCreator.createDataSource("postgresql.datasource");
         targetDataSources.put(ClientDatabaseContextHolder.ClientDatabaseEnum.MYSQL, mySqlDataSource);
         targetDataSources.put(ClientDatabaseContextHolder.ClientDatabaseEnum.H2, h2DataSource);
+        targetDataSources.put(ClientDatabaseContextHolder.ClientDatabaseEnum.POSTGRESQL, postgresqlDataSource);
 
         ClientDataSourceRouter clientRoutingDatasource = new ClientDataSourceRouter();
         clientRoutingDatasource.setTargetDataSources(targetDataSources);
