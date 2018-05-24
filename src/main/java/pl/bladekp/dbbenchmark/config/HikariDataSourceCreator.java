@@ -1,4 +1,4 @@
-package com.gft.dbbenchmark.config;
+package pl.bladekp.dbbenchmark.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

@@ -1,4 +1,4 @@
-package com.gft.dbbenchmark.model;
+package pl.bladekp.dbbenchmark.model;
 
 import lombok.Builder;
 import lombok.Getter;

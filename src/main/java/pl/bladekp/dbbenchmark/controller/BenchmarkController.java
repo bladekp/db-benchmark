@@ -1,7 +1,7 @@
-package com.gft.dbbenchmark.controller;
+package pl.bladekp.dbbenchmark.controller;
 
-import com.gft.dbbenchmark.config.ClientDatabaseContextHolder;
-import com.gft.dbbenchmark.service.TownService;
+import pl.bladekp.dbbenchmark.config.ClientDatabaseContextHolder;
+import pl.bladekp.dbbenchmark.service.TownService;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

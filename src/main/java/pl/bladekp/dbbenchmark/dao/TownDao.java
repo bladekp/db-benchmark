@@ -1,6 +1,6 @@
-package com.gft.dbbenchmark.dao;
+package pl.bladekp.dbbenchmark.dao;
 
-import com.gft.dbbenchmark.model.Town;
+import pl.bladekp.dbbenchmark.model.Town;
 
 import java.util.List;
 

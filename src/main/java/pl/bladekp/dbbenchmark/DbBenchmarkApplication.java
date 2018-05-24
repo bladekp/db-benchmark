@@ -1,4 +1,4 @@
-package com.gft.dbbenchmark;
+package pl.bladekp.dbbenchmark;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

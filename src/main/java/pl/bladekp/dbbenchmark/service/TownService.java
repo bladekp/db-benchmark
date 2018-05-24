@@ -1,10 +1,10 @@
-package com.gft.dbbenchmark.service;
+package pl.bladekp.dbbenchmark.service;
 
-import com.gft.dbbenchmark.config.ClientDatabaseContextHolder;
-import com.gft.dbbenchmark.dao.TownDao;
-import com.gft.dbbenchmark.dao.TownDaoJdbc;
-import com.gft.dbbenchmark.dao.TownDaoMongo;
-import com.gft.dbbenchmark.model.Town;
+import pl.bladekp.dbbenchmark.dao.TownDao;
+import pl.bladekp.dbbenchmark.dao.TownDaoJdbc;
+import pl.bladekp.dbbenchmark.dao.TownDaoMongo;
+import pl.bladekp.dbbenchmark.model.Town;
+import pl.bladekp.dbbenchmark.config.ClientDatabaseContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;

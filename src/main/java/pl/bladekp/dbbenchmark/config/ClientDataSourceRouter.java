@@ -1,4 +1,4 @@
-package com.gft.dbbenchmark.config;
+package pl.bladekp.dbbenchmark.config;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 

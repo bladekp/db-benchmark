@@ -1,4 +1,4 @@
-package com.gft.dbbenchmark;
+package pl.bladekp.dbbenchmark;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

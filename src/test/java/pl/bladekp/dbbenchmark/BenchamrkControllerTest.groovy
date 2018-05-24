@@ -1,4 +1,4 @@
-package com.gft.dbbenchmark
+package pl.bladekp.dbbenchmark
 
 import spock.lang.Specification
 

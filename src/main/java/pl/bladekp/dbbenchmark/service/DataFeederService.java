@@ -1,7 +1,7 @@
-package com.gft.dbbenchmark.service;
+package pl.bladekp.dbbenchmark.service;
 
-import com.gft.dbbenchmark.config.ClientDatabaseContextHolder;
-import com.gft.dbbenchmark.model.Town;
+import pl.bladekp.dbbenchmark.config.ClientDatabaseContextHolder;
+import pl.bladekp.dbbenchmark.model.Town;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

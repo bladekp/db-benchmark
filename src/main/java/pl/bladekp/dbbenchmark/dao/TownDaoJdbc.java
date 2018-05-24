@@ -1,8 +1,6 @@
-package com.gft.dbbenchmark.dao;
+package pl.bladekp.dbbenchmark.dao;
 
-import com.gft.dbbenchmark.model.Town;
-import org.springframework.data.mongodb.MongoDbFactory;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import pl.bladekp.dbbenchmark.model.Town;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

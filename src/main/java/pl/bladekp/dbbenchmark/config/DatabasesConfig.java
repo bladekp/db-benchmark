@@ -1,8 +1,8 @@
-package com.gft.dbbenchmark.config;
+package pl.bladekp.dbbenchmark.config;
 
-import com.gft.dbbenchmark.dao.TownDaoJdbc;
-import com.gft.dbbenchmark.dao.TownDaoMongo;
-import com.gft.dbbenchmark.service.TownService;
+import pl.bladekp.dbbenchmark.dao.TownDaoJdbc;
+import pl.bladekp.dbbenchmark.dao.TownDaoMongo;
+import pl.bladekp.dbbenchmark.service.TownService;
 import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
