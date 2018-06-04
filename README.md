@@ -27,3 +27,6 @@
     
 # Todo
 
+* unit testing
+* separate text field for mongo commands
+* bigger database
