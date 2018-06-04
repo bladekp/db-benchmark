@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <td>Database</td>
+                <td>Statistics</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="dbTime : ${timeMap}">
+                <td th:text="${dbTime.key}"></td>
+                <td th:text="${dbTime.value}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
