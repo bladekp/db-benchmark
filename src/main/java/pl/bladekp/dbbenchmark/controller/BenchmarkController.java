@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 @Controller
 public class BenchmarkController {
 
-    private static final int TEST_COUNT = 1000;
     private final TownService townService;
 
     @Autowired
@@ -33,13 +32,13 @@ public class BenchmarkController {
 
     @RequestMapping(value = "/benchmark", method = RequestMethod.POST, produces = "application/json")
     public String prepareBenchmarkReport(HttpServletRequest request, Model model) {
-        model.addAttribute("timeMap", executeBenchmark(request.getParameter("sql")));
+        model.addAttribute("timeMap", executeBenchmark(request.getParameter("sql"), Integer.valueOf(request.getParameter("count"))));
         return "benchmark-report";
     }
 
-    private Map<ClientDatabaseContextHolder.ClientDatabaseEnum, BenchmarkStatistics> executeBenchmark(final String query) {
+    private Map<ClientDatabaseContextHolder.ClientDatabaseEnum, BenchmarkStatistics> executeBenchmark(final String query, final int count) {
         return IntStream
-                .range(0, TEST_COUNT)
+                .range(0, count)
                 .mapToObj((i) -> {
                     Map<ClientDatabaseContextHolder.ClientDatabaseEnum, BenchmarkStatistics> map = new HashMap<>();
                     Stream

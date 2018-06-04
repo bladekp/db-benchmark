@@ -36,5 +36,5 @@ oracle:
   datasource:
     url: jdbc:oracle:thin:@localhost:1521:orcl
     username: c##bladekp
-    password: B21d07p29r14.
+    password: rk#9*apv`sSpR7*{
     driver-class-name: oracle.jdbc.driver.OracleDriver

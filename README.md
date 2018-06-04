@@ -14,6 +14,12 @@
 # Run
 
     mvn spring-boot:run
+    
+# Usage
+    
+1. Go to: http://localhost:8080/benchmark
+2. ![form](img/form.png) 
+3. ![report](img/report.png)
 
 # Test
 

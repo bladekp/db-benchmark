@@ -24,7 +24,7 @@ public class ClientDatabaseContextHolder {
         H2("h2", true),
         MONGO("mongo", false),
         POSTGRESQL("postgresql", true),
-        ORACLE("oracle", false);
+        ORACLE("oracle", true);
 
         private String datasourceNamespace;
         private boolean enabled;
