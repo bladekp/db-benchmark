@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Controller
 public class BenchmarkController {
@@ -41,20 +42,24 @@ public class BenchmarkController {
                 .range(0, TEST_COUNT)
                 .mapToObj((i) -> {
                     Map<ClientDatabaseContextHolder.ClientDatabaseEnum, BenchmarkStatistics> map = new HashMap<>();
-                    for (ClientDatabaseContextHolder.ClientDatabaseEnum db : ClientDatabaseContextHolder.ClientDatabaseEnum.values()) {
-                        map.put(db, new BenchmarkStatistics(1, townService.executeBenchmark(db, query)));
-                    }
+                    Stream
+                            .of(ClientDatabaseContextHolder.ClientDatabaseEnum.values())
+                            .filter(ClientDatabaseContextHolder.ClientDatabaseEnum::isEnabled)
+                            .forEach(db ->  map.put(db, new BenchmarkStatistics(1, townService.executeBenchmark(db, query))));
                     return map;
                 })
                 .reduce(
                         (map1, map2) -> {
-                            for (ClientDatabaseContextHolder.ClientDatabaseEnum db : ClientDatabaseContextHolder.ClientDatabaseEnum.values()) {
-                                BenchmarkStatistics benchmark1 = map1.get(db);
-                                BenchmarkStatistics benchmark2 = map2.get(db);
-                                map1.put(db,
-                                        new BenchmarkStatistics(benchmark1.totalOperations + benchmark2.totalOperations, benchmark1.totalOperationsTime + benchmark2.totalOperationsTime)
-                                );
-                            }
+                            Stream
+                                    .of(ClientDatabaseContextHolder.ClientDatabaseEnum.values())
+                                    .filter(ClientDatabaseContextHolder.ClientDatabaseEnum::isEnabled)
+                                    .forEach(db -> {
+                                        BenchmarkStatistics benchmark1 = map1.get(db);
+                                        BenchmarkStatistics benchmark2 = map2.get(db);
+                                        map1.put(db,
+                                                new BenchmarkStatistics(benchmark1.totalOperations + benchmark2.totalOperations, benchmark1.totalOperationsTime + benchmark2.totalOperationsTime)
+                                        );
+                                    });
                             return map1;
                         }
                 )

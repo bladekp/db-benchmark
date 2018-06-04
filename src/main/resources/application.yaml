@@ -1,0 +1,40 @@
+spring:
+  h2:
+    console:
+      path: /h2
+      enabled: true
+  jpa:
+    generate-ddl: true
+    database: default
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+logging:
+  file: logs/application.log
+  level:
+   root: ERROR
+
+postgresql:
+  datasource:
+    url: jdbc:postgresql:benchmark
+    username: postgres
+    password: qwerty1
+
+h2:
+  datasource:
+    url: jdbc:h2:file:~/test
+    username: sa
+
+mysql:
+  datasource:
+    url: jdbc:mysql://localhost:3306/benchmark?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: qwerty1
+
+oracle:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:orcl
+    username: c##bladekp
+    password: B21d07p29r14.
+    driver-class-name: oracle.jdbc.driver.OracleDriver

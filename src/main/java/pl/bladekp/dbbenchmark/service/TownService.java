@@ -27,13 +27,13 @@ public class TownService {
         return town;
     }
 
-    public void saveAll(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb, List<Town> townList) {
+    void saveAll(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb, List<Town> townList) {
         TownDao dao = initSource(clientDb);
         dao.saveAll(townList);
         clearSource();
     }
 
-    public void clearAll(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb) {
+    void clearAll(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb) {
         TownDao dao = initSource(clientDb);
         dao.clearAll();
         clearSource();

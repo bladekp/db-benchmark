@@ -2,7 +2,6 @@ package pl.bladekp.dbbenchmark.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -20,11 +19,12 @@ public class HikariDataSourceCreator {
     }
 
     DataSource createDataSource(String configNamespace) {
+        String fullConfigNamespace = configNamespace + ".datasource";
         HikariConfig dataSourceConfig = new HikariConfig();
-        String url = env.getRequiredProperty(configNamespace + ".url");
-        String username = env.getProperty(configNamespace + ".username");
-        String password = env.getProperty(configNamespace + ".password");
-        String driver = env.getProperty(configNamespace + ".driver-class-name");
+        String url = env.getRequiredProperty(fullConfigNamespace + ".url");
+        String username = env.getProperty(fullConfigNamespace + ".username");
+        String password = env.getProperty(fullConfigNamespace + ".password");
+        String driver = env.getProperty(fullConfigNamespace + ".driver-class-name");
         dataSourceConfig.setJdbcUrl(url);
         if (username != null) {
             dataSourceConfig.setUsername(username);

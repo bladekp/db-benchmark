@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public class TownDaoMongo implements TownDao {
 
-    private final MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
 
     public TownDaoMongo(MongoDbFactory mongoDbFactory) {
         this.mongoTemplate = new MongoTemplate(mongoDbFactory);

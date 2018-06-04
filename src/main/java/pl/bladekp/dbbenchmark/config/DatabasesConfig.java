@@ -1,8 +1,5 @@
 package pl.bladekp.dbbenchmark.config;
 
-import pl.bladekp.dbbenchmark.dao.TownDaoJdbc;
-import pl.bladekp.dbbenchmark.dao.TownDaoMongo;
-import pl.bladekp.dbbenchmark.service.TownService;
 import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,10 +7,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import pl.bladekp.dbbenchmark.dao.TownDaoJdbc;
+import pl.bladekp.dbbenchmark.dao.TownDaoMongo;
+import pl.bladekp.dbbenchmark.service.TownService;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Configuration
 @EnableTransactionManagement
@@ -30,23 +31,25 @@ public class DatabasesConfig {
     public DataSource clientDatasource() {
         Map<Object, Object> targetDataSources = new HashMap<>();
 
-        DataSource mySqlDataSource = dataSourceCreator.createDataSource("mysql.datasource");
-        DataSource h2DataSource = dataSourceCreator.createDataSource("h2.datasource");
-        DataSource postgresqlDataSource = dataSourceCreator.createDataSource("postgresql.datasource");
-        targetDataSources.put(ClientDatabaseContextHolder.ClientDatabaseEnum.MYSQL, mySqlDataSource);
-        targetDataSources.put(ClientDatabaseContextHolder.ClientDatabaseEnum.H2, h2DataSource);
-        targetDataSources.put(ClientDatabaseContextHolder.ClientDatabaseEnum.POSTGRESQL, postgresqlDataSource);
+        Stream
+                .of(ClientDatabaseContextHolder.ClientDatabaseEnum.values())
+                .filter(db -> db != ClientDatabaseContextHolder.ClientDatabaseEnum.MONGO && db.isEnabled())
+                .forEach(db -> targetDataSources.put(db, dataSourceCreator.createDataSource(db.getDatasourceNamespace())));
 
         ClientDataSourceRouter clientRoutingDatasource = new ClientDataSourceRouter();
         clientRoutingDatasource.setTargetDataSources(targetDataSources);
-        clientRoutingDatasource.setDefaultTargetDataSource(h2DataSource);
+        if (targetDataSources.isEmpty()){
+            throw new RuntimeException("At least one datasource should be provided.");
+        } else {
+            clientRoutingDatasource.setDefaultTargetDataSource(targetDataSources.get(ClientDatabaseContextHolder.ClientDatabaseEnum.H2));
+        }
+
         return clientRoutingDatasource;
     }
 
     @Bean(name = "mongoDataSource")
     public MongoDbFactory mongoDbFactory() {
-        MongoClient mongoClient = new MongoClient("localhost", 27017);
-        return new SimpleMongoDbFactory(mongoClient, "benchmark");
+        return new SimpleMongoDbFactory(new MongoClient("localhost", 27017), "benchmark");
     }
 
     @Bean

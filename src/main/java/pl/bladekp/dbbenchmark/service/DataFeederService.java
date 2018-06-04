@@ -1,15 +1,16 @@
 package pl.bladekp.dbbenchmark.service;
 
-import pl.bladekp.dbbenchmark.config.ClientDatabaseContextHolder;
-import pl.bladekp.dbbenchmark.model.Town;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.bladekp.dbbenchmark.config.ClientDatabaseContextHolder;
+import pl.bladekp.dbbenchmark.model.Town;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class DataFeederService {
@@ -24,12 +25,13 @@ public class DataFeederService {
     @PostConstruct
     public void initialize() {
         List<Town> townList = createRandomTowns();
-        initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum.H2, townList);
-        initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum.MYSQL, townList);
-        initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum.POSTGRESQL, townList);
+        Stream
+                .of(ClientDatabaseContextHolder.ClientDatabaseEnum.values())
+                .filter(ClientDatabaseContextHolder.ClientDatabaseEnum::isEnabled)
+                .forEach(db -> initialize(db, townList));
     }
 
-    private void initiialize(ClientDatabaseContextHolder.ClientDatabaseEnum clientDatabase, List<Town> townList) {
+    private void initialize(ClientDatabaseContextHolder.ClientDatabaseEnum clientDatabase, List<Town> townList) {
         townService.clearAll(clientDatabase);
         townService.saveAll(clientDatabase, townList);
     }
