@@ -11,22 +11,22 @@ import javax.persistence.*;
 @Builder
 @Getter
 @ToString
-public class Town {
+public class Language {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @JoinColumn(name = "COUNTRY", foreignKey = @ForeignKey(name = "FK_COUNTRY"))
+    @ManyToOne
+    private Country country;
 
     @Column
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "COUNTRY", foreignKey = @ForeignKey(name = "FK_COUNTRY"))
-    private Country country;
+    @Column
+    private Boolean isOfficial;
 
     @Column
-    private String district;
-
-    @Column
-    private Long population;
+    private Double percentage;
 }

@@ -1,19 +1,22 @@
 spring:
+  jpa:
+    database: default
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
   h2:
     console:
       path: /h2
       enabled: true
-  jpa:
-    generate-ddl: true
-    database: default
-    show-sql: true
-    hibernate:
-      ddl-auto: update
+  datasource:
+    initialization-mode: always
 
 logging:
   file: logs/application.log
   level:
-   root: ERROR
+   root: INFO
 
 postgresql:
   datasource:

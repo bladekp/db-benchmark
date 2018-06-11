@@ -1,19 +1,26 @@
 package pl.bladekp.dbbenchmark.config;
 
 import com.mongodb.MongoClient;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import pl.bladekp.dbbenchmark.dao.TownDaoJdbc;
-import pl.bladekp.dbbenchmark.dao.TownDaoMongo;
-import pl.bladekp.dbbenchmark.service.TownService;
+import pl.bladekp.dbbenchmark.dao.DaoJdbc;
+import pl.bladekp.dbbenchmark.dao.DaoMongo;
+import pl.bladekp.dbbenchmark.service.DataAccessService;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 @Configuration
@@ -27,6 +34,14 @@ public class DatabasesConfig {
         this.dataSourceCreator = dataSourceCreator;
     }
 
+    @Bean
+    public LocalSessionFactoryBean sessionFactory() {
+        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+        sessionFactory.setDataSource(clientDatasource());
+        sessionFactory.setPackagesToScan("pl.bladekp.dbbenchmark.model");
+        return sessionFactory;
+    }
+
     @Bean(name = "dataSource")
     public DataSource clientDatasource() {
         Map<Object, Object> targetDataSources = new HashMap<>();
@@ -38,7 +53,7 @@ public class DatabasesConfig {
 
         ClientDataSourceRouter clientRoutingDatasource = new ClientDataSourceRouter();
         clientRoutingDatasource.setTargetDataSources(targetDataSources);
-        if (targetDataSources.isEmpty()){
+        if (targetDataSources.isEmpty()) {
             throw new RuntimeException("At least one datasource should be provided.");
         } else {
             clientRoutingDatasource.setDefaultTargetDataSource(targetDataSources.get(ClientDatabaseContextHolder.ClientDatabaseEnum.H2));
@@ -53,7 +68,12 @@ public class DatabasesConfig {
     }
 
     @Bean
-    public TownService townService() {
-        return new TownService(new TownDaoJdbc(clientDatasource()), new TownDaoMongo(mongoDbFactory()));
+    public DataAccessService service() {
+        return new DataAccessService(null, new DaoMongo(mongoDbFactory()));
+    }
+
+    @Bean
+    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
+        return entityManagerFactory.createEntityManager();
     }
 }

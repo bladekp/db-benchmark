@@ -6,7 +6,7 @@ public class ClientDatabaseContextHolder {
 
     private static ThreadLocal<ClientDatabaseEnum> CONTEXT = new ThreadLocal<>();
 
-    public static void set(ClientDatabaseEnum clientDatabase) {
+    private static void set(ClientDatabaseEnum clientDatabase) {
         CONTEXT.set(clientDatabase);
     }
 
@@ -14,24 +14,37 @@ public class ClientDatabaseContextHolder {
         return CONTEXT.get();
     }
 
-    public static void clear() {
+    private static void clear() {
         CONTEXT.remove();
+    }
+
+    public static void execute(Action action, ClientDatabaseEnum database){
+        set(database);
+        action.run();
+        clear();
     }
 
     @Getter
     public enum ClientDatabaseEnum {
-        MYSQL("mysql", true),
-        H2("h2", true),
-        MONGO("mongo", false),
-        POSTGRESQL("postgresql", true),
-        ORACLE("oracle", true);
+        MYSQL("mysql", "org.hibernate.dialect.MySQLDialect", true),
+        H2("h2", "org.hibernate.dialect.H2Dialect", true),
+        MONGO("mongo", "org.hibernate.ogm.datastore.mongodb.MongoDBDialect", false),
+        POSTGRESQL("postgresql", "org.hibernate.dialect.PostgreSQL82Dialect", true),
+        ORACLE("oracle", "org.hibernate.dialect.OracleDialect", true);
 
         private String datasourceNamespace;
+        private String dialect;
         private boolean enabled;
 
-        ClientDatabaseEnum(String datasourceNamespace, boolean enabled){
+        ClientDatabaseEnum(String datasourceNamespace, String dialect, boolean enabled){
             this.datasourceNamespace = datasourceNamespace;
+            this.dialect = dialect;
             this.enabled = enabled;
         }
+    }
+
+    @FunctionalInterface
+    public interface Action {
+        void run();
     }
 }

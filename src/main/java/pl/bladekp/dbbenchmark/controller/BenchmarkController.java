@@ -1,7 +1,7 @@
 package pl.bladekp.dbbenchmark.controller;
 
 import pl.bladekp.dbbenchmark.config.ClientDatabaseContextHolder;
-import pl.bladekp.dbbenchmark.service.TownService;
+import pl.bladekp.dbbenchmark.service.DataAccessService;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,11 +18,11 @@ import java.util.stream.Stream;
 @Controller
 public class BenchmarkController {
 
-    private final TownService townService;
+    private final DataAccessService dataAccessService;
 
     @Autowired
-    BenchmarkController(TownService townService) {
-        this.townService = townService;
+    BenchmarkController(DataAccessService dataAccessService) {
+        this.dataAccessService = dataAccessService;
     }
 
     @RequestMapping(value = "/benchmark", method = RequestMethod.GET)
@@ -44,7 +44,7 @@ public class BenchmarkController {
                     Stream
                             .of(ClientDatabaseContextHolder.ClientDatabaseEnum.values())
                             .filter(ClientDatabaseContextHolder.ClientDatabaseEnum::isEnabled)
-                            .forEach(db ->  map.put(db, new BenchmarkStatistics(1, townService.executeBenchmark(db, query))));
+                            .forEach(db ->  map.put(db, new BenchmarkStatistics(1, dataAccessService.executeBenchmark(db, query))));
                     return map;
                 })
                 .reduce(
