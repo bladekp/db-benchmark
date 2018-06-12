@@ -34,15 +34,7 @@ public class DatabasesConfig {
         this.dataSourceCreator = dataSourceCreator;
     }
 
-    @Bean
-    public LocalSessionFactoryBean sessionFactory() {
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(clientDatasource());
-        sessionFactory.setPackagesToScan("pl.bladekp.dbbenchmark.model");
-        return sessionFactory;
-    }
-
-    @Bean(name = "dataSource")
+    @Bean(name = "jdbcDataSource")
     public DataSource clientDatasource() {
         Map<Object, Object> targetDataSources = new HashMap<>();
 
@@ -56,7 +48,7 @@ public class DatabasesConfig {
         if (targetDataSources.isEmpty()) {
             throw new RuntimeException("At least one datasource should be provided.");
         } else {
-            clientRoutingDatasource.setDefaultTargetDataSource(targetDataSources.get(ClientDatabaseContextHolder.ClientDatabaseEnum.H2));
+            clientRoutingDatasource.setDefaultTargetDataSource(targetDataSources.get(ClientDatabaseContextHolder.ClientDatabaseEnum.defaultDatabase()));
         }
 
         return clientRoutingDatasource;
@@ -65,11 +57,6 @@ public class DatabasesConfig {
     @Bean(name = "mongoDataSource")
     public MongoDbFactory mongoDbFactory() {
         return new SimpleMongoDbFactory(new MongoClient("localhost", 27017), "benchmark");
-    }
-
-    @Bean
-    public DataAccessService service() {
-        return new DataAccessService(null, new DaoMongo(mongoDbFactory()));
     }
 
     @Bean

@@ -53,9 +53,13 @@ public class Country {
     @Column
     private String headOfState;
 
-    @OneToOne
-    @JoinColumn(name="CAPITAL", foreignKey = @ForeignKey(name = "FK_CAPITAL"))
-    private Town capital;
+    @Column
+    private String code2;
+
+    //@OneToOne
+    //@JoinColumn(name="CAPITAL", foreignKey = @ForeignKey(name = "FK_CAPITAL"))
+    @Column
+    private int capital;
 
     @OneToMany(mappedBy = "country")
     private Set<Language> languages;

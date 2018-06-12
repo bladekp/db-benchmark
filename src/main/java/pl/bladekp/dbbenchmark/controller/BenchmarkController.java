@@ -44,7 +44,7 @@ public class BenchmarkController {
                     Stream
                             .of(ClientDatabaseContextHolder.ClientDatabaseEnum.values())
                             .filter(ClientDatabaseContextHolder.ClientDatabaseEnum::isEnabled)
-                            .forEach(db ->  map.put(db, new BenchmarkStatistics(1, dataAccessService.executeBenchmark(db, query))));
+                            .forEach(db ->  map.put(db, new BenchmarkStatistics(1, ClientDatabaseContextHolder.execute(() -> dataAccessService.executeBenchmark(query), db))));
                     return map;
                 })
                 .reduce(

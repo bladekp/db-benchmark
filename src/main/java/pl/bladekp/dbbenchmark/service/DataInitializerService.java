@@ -15,6 +15,9 @@ import pl.bladekp.dbbenchmark.config.ClientDatabaseContextHolder;
 
 import javax.persistence.Entity;
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
@@ -26,11 +29,13 @@ import static org.hibernate.tool.schema.TargetType.STDOUT;
 @Slf4j
 public class DataInitializerService {
 
+    private final DataAccessService dataAccessService;
     private final DataSource dataSource;
 
     @Autowired
-    public DataInitializerService(DataSource dataSource) {
+    public DataInitializerService(DataSource dataSource, DataAccessService dataAccessService) {
         this.dataSource = dataSource;
+        this.dataAccessService = dataAccessService;
     }
 
     private void createDatabase() {
@@ -51,11 +56,33 @@ public class DataInitializerService {
                 .create(EnumSet.of(STDOUT, DATABASE), metadataSources.buildMetadata());
     }
 
+    private void insertSampleData() {
+        Stream
+                .of("country.init.sql", "town1.init.sql", "town2.init.sql", "language.init.sql")
+                .map((fileName) -> new File(ClassLoader.getSystemClassLoader().getResource(fileName).getFile()))
+                .flatMap((file) -> {
+                    try {
+                        return Files.readAllLines(file.toPath()).stream();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                })
+                .forEach(dataAccessService::addToBatch);
+
+        dataAccessService.executeBatch();
+    }
+
+    private void init(){
+        createDatabase();
+        insertSampleData();
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void initialize() {
         Stream
                 .of(ClientDatabaseContextHolder.ClientDatabaseEnum.values())
                 .filter(ClientDatabaseContextHolder.ClientDatabaseEnum::isEnabled)
-                .forEach(db -> ClientDatabaseContextHolder.execute(this::createDatabase, db));
+                .forEach(db -> ClientDatabaseContextHolder.execute(this::init, db));
     }
 }

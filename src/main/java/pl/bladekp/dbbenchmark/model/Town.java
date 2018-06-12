@@ -21,7 +21,7 @@ public class Town {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "COUNTRY", foreignKey = @ForeignKey(name = "FK_COUNTRY"))
+    @JoinColumn(name = "COUNTRY", foreignKey = @ForeignKey(name = "FK_TOWN_COUNTRY"))
     private Country country;
 
     @Column

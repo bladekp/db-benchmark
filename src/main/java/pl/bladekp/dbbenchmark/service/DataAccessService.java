@@ -1,13 +1,11 @@
 package pl.bladekp.dbbenchmark.service;
 
-import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.bladekp.dbbenchmark.config.ClientDatabaseContextHolder;
-import pl.bladekp.dbbenchmark.dao.Dao;
+import org.springframework.stereotype.Component;
 import pl.bladekp.dbbenchmark.dao.DaoJdbc;
 import pl.bladekp.dbbenchmark.dao.DaoMongo;
 
-@Service
+@Component
 public class DataAccessService {
 
     private final DaoJdbc daoJdbc;
@@ -19,23 +17,21 @@ public class DataAccessService {
         this.daoMongo = daoMongo;
     }
 
-    public long executeBenchmark(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb, String query) {
-        Dao dao = initSource(clientDb);
+    public long executeBenchmark(String query) {
         long startTime = System.currentTimeMillis();
-        ClientDatabaseContextHolder.execute(() -> dao.execute(query), clientDb);
+        daoJdbc.execute(query);
         return System.currentTimeMillis() - startTime;
     }
 
-    public void execute(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb, String query) {
-        Dao dao = initSource(clientDb);
-        ClientDatabaseContextHolder.execute(() -> dao.execute(query), clientDb);
+    public void execute(String query) {
+        daoJdbc.execute(query);
     }
 
-    private Dao initSource(ClientDatabaseContextHolder.ClientDatabaseEnum clientDb) {
-        if (clientDb != ClientDatabaseContextHolder.ClientDatabaseEnum.MONGO) {
-            return daoJdbc;
-        } else {
-            return daoMongo;
-        }
+    public void addToBatch(String query) {
+        daoJdbc.addToBatch(query);
+    }
+
+    public void executeBatch() {
+        daoJdbc.executeBatch();
     }
 }

@@ -17,7 +17,7 @@ public class Language {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "COUNTRY", foreignKey = @ForeignKey(name = "FK_COUNTRY"))
+    @JoinColumn(name = "COUNTRY", foreignKey = @ForeignKey(name = "FK_LANGUAGE_COUNTRY"))
     @ManyToOne
     private Country country;
 
@@ -25,7 +25,7 @@ public class Language {
     private String name;
 
     @Column
-    private Boolean isOfficial;
+    private Integer isOfficial;
 
     @Column
     private Double percentage;
