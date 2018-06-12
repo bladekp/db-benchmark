@@ -16,6 +16,8 @@
     mvn spring-boot:run
     
 # Usage
+
+![diagram](src/main/resources/static/diagram.png)    
     
 1. Go to: http://localhost:8080/benchmark
 2. ![form](img/form.png) 
