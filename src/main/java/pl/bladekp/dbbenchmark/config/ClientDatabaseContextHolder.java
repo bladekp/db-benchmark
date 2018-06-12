@@ -35,10 +35,10 @@ public class ClientDatabaseContextHolder {
 
     @Getter
     public enum ClientDatabaseEnum {
-        MYSQL("mysql", "org.hibernate.dialect.MySQLDialect", false),
-        H2("h2", "org.hibernate.dialect.H2Dialect", false),
+        MYSQL("mysql", "org.hibernate.dialect.MySQLDialect", true),
+        H2("h2", "org.hibernate.dialect.H2Dialect", true),
         MONGO("mongo", "org.hibernate.ogm.datastore.mongodb.MongoDBDialect", false),
-        POSTGRESQL("postgresql", "org.hibernate.dialect.PostgreSQL82Dialect", false),
+        POSTGRESQL("postgresql", "org.hibernate.dialect.PostgreSQL82Dialect", true),
         ORACLE("oracle", "org.hibernate.dialect.OracleDialect", true);
 
         private String datasourceNamespace;
@@ -52,7 +52,7 @@ public class ClientDatabaseContextHolder {
         }
 
         public static ClientDatabaseEnum defaultDatabase(){
-            return ORACLE;
+            return H2;
         }
     }
 

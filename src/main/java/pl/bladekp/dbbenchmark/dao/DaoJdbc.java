@@ -22,7 +22,7 @@ public class DaoJdbc implements Dao {
     @Override
     public void addToBatch(String query) {
         try {
-            if (statement == null) {
+            if (statement == null || statement.isClosed()) {
                 statement = dataSource.getConnection().createStatement();
             }
             statement.addBatch(query);
@@ -35,7 +35,7 @@ public class DaoJdbc implements Dao {
     public void executeBatch() {
         try {
             statement.executeBatch();
-            statement = null;
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
