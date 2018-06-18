@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.tool.schema.TargetType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -31,6 +32,7 @@ public class DataInitializerService {
 
     private final DataAccessService dataAccessService;
     private final DataSource dataSource;
+    private EnumSet<TargetType> targetType = EnumSet.of(STDOUT, DATABASE);
 
     @Autowired
     public DataInitializerService(DataSource dataSource, DataAccessService dataAccessService) {
@@ -38,22 +40,28 @@ public class DataInitializerService {
         this.dataAccessService = dataAccessService;
     }
 
+    public void setTargetType(EnumSet<TargetType> targetType){
+        this.targetType = targetType;
+    }
+
     private void createDatabase() {
-        StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder().applySetting(DATASOURCE, dataSource);
-        MetadataSources metadataSources = new MetadataSources(registryBuilder.build());
-        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
-        scanner.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
-        for (BeanDefinition def : scanner.findCandidateComponents("pl.bladekp.dbbenchmark.model")) {
-            try {
-                metadataSources.addAnnotatedClass(Class.forName(def.getBeanClassName()));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+        if (targetType != null) {
+            StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder().applySetting(DATASOURCE, dataSource);
+            MetadataSources metadataSources = new MetadataSources(registryBuilder.build());
+            ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
+            scanner.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
+            for (BeanDefinition def : scanner.findCandidateComponents("pl.bladekp.dbbenchmark.model")) {
+                try {
+                    metadataSources.addAnnotatedClass(Class.forName(def.getBeanClassName()));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
+            new SchemaExport()
+                    .setFormat(true)
+                    .setHaltOnError(false)
+                    .create(targetType, metadataSources.buildMetadata());
         }
-        new SchemaExport()
-                .setFormat(true)
-                .setHaltOnError(false)
-                .create(EnumSet.of(STDOUT, DATABASE), metadataSources.buildMetadata());
     }
 
     private void insertSampleData() {

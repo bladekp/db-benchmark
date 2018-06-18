@@ -25,10 +25,20 @@
 
 # Test
 
-    mvn test
+1. Just test:
+
+   
+    mvn test 
+
+2. Test with coverage:
+
+    
+    mvn cobertura:cobertura
+
+and open /target/site/cobertura/index.html in browser
     
 # Todo
 
 * unit testing
 * separate text field for mongo commands
-* bigger database
+* unit test coverage
