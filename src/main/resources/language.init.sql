@@ -906,7 +906,7 @@ INSERT INTO language(country, name, isofficial, percentage) VALUES ('UKR','Polis
 INSERT INTO language(country, name, isofficial, percentage) VALUES ('UKR','Romanian',0,0.7)
 INSERT INTO language(country, name, isofficial, percentage) VALUES ('UKR','Russian',0,32.9)
 INSERT INTO language(country, name, isofficial, percentage) VALUES ('UKR','Ukrainian',1,64.7)
-INSERT INTO language(country, name, isofficial, percentage) VALUES ('UMI','English',1,0.0)
+INSERT INTO language(country, name, isofficial, percentage) VALUES ('UMI','English',1,100.0)
 INSERT INTO language(country, name, isofficial, percentage) VALUES ('URY','Spanish',1,95.7)
 INSERT INTO language(country, name, isofficial, percentage) VALUES ('USA','Chinese',0,0.6)
 INSERT INTO language(country, name, isofficial, percentage) VALUES ('USA','English',1,86.2)
