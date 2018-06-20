@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class BenchmarkController {
         return "benchmark";
     }
 
+    @Transactional
     @RequestMapping(value = "/benchmark", method = RequestMethod.POST, produces = "application/json")
     public String prepareBenchmarkReport(HttpServletRequest request, Model model) {
         model.addAttribute("timeMap", executeBenchmark(request.getParameter("sql"), Integer.valueOf(request.getParameter("count"))));
@@ -57,7 +59,7 @@ public class BenchmarkController {
                                         BenchmarkStatistics benchmark1 = map1.get(db);
                                         BenchmarkStatistics benchmark2 = map2.get(db);
                                         map1.put(db,
-                                                new BenchmarkStatistics(benchmark1.totalOperations + benchmark2.totalOperations, benchmark1.totalOperationsTime + benchmark2.totalOperationsTime)
+                                                new BenchmarkStatistics(benchmark1.totalOperations + benchmark2.totalOperations, benchmark1.totalOperationsTime + benchmark2.totalOperationsTime, benchmark1.exception)
                                         );
                                     });
                             return map1;
@@ -73,8 +75,8 @@ public class BenchmarkController {
         private double operationsPerSecond;
         private Exception exception;
 
-        private BenchmarkStatistics(long totalOperations, long totalOperationsTime) {
-            this.exception = null;
+        private BenchmarkStatistics(long totalOperations, long totalOperationsTime, Exception e) {
+            this.exception = e;
             this.totalOperations = totalOperations;
             this.totalOperationsTime = totalOperationsTime;
             double seconds = totalOperationsTime / 1000.0;

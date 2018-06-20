@@ -7,7 +7,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(indexes = { @Index(name = "townPopulationIndex", columnList = "population")})
 @Builder
 @Getter
 @ToString

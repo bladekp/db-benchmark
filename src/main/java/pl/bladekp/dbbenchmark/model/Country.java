@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table
+@Table(indexes = { @Index(name = "countryPopulationIndex", columnList = "population"), @Index(name = "countrySurfaceAreaIndex", columnList = "surfaceArea")})
 @Builder
 @Getter
 @ToString

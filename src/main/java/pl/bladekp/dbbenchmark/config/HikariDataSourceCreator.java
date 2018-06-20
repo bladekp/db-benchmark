@@ -26,6 +26,9 @@ public class HikariDataSourceCreator {
         String password = env.getProperty(fullConfigNamespace + ".password");
         String driver = env.getProperty(fullConfigNamespace + ".driver-class-name");
         dataSourceConfig.setJdbcUrl(url);
+        dataSourceConfig.setMaxLifetime(40000);
+        dataSourceConfig.setIdleTimeout(30000);
+        dataSourceConfig.setMaximumPoolSize(48);
         if (username != null) {
             dataSourceConfig.setUsername(username);
         }
