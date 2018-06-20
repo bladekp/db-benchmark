@@ -26,7 +26,7 @@ public class ClientDatabaseContextHolder {
         clear();
     }
 
-    public static <T> T execute(Supplier<T> action, ClientDatabaseEnum database) {
+    public static <T> T execute(Supplier<T> action, ClientDatabaseEnum database){
         set(database);
         T result = action.get();
         clear();

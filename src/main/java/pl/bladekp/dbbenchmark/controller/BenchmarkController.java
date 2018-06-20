@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -44,7 +45,7 @@ public class BenchmarkController {
                     Stream
                             .of(ClientDatabaseContextHolder.ClientDatabaseEnum.values())
                             .filter(ClientDatabaseContextHolder.ClientDatabaseEnum::isEnabled)
-                            .forEach(db ->  map.put(db, new BenchmarkStatistics(1, ClientDatabaseContextHolder.execute(() -> dataAccessService.executeBenchmark(query), db))));
+                            .forEach(db ->  map.put(db, new BenchmarkStatistics(db, query)));
                     return map;
                 })
                 .reduce(
@@ -67,11 +68,13 @@ public class BenchmarkController {
 
     @ToString
     private class BenchmarkStatistics {
-        private final long totalOperations;
-        private final long totalOperationsTime;
-        private final double operationsPerSecond;
+        private long totalOperations;
+        private long totalOperationsTime;
+        private double operationsPerSecond;
+        private Exception exception;
 
         private BenchmarkStatistics(long totalOperations, long totalOperationsTime) {
+            this.exception = null;
             this.totalOperations = totalOperations;
             this.totalOperationsTime = totalOperationsTime;
             double seconds = totalOperationsTime / 1000.0;
@@ -79,6 +82,32 @@ public class BenchmarkController {
                 this.operationsPerSecond = totalOperations / seconds;
             } else {
                 this.operationsPerSecond = Double.MAX_VALUE;
+            }
+        }
+
+        private BenchmarkStatistics(ClientDatabaseContextHolder.ClientDatabaseEnum db, String query){
+            try {
+                long totalOperationsTime = ClientDatabaseContextHolder.execute(() -> {
+                    try {
+                        return dataAccessService.executeBenchmark(query);
+                    } catch (SQLException e){
+                        throw new RuntimeException(e);
+                    }
+                }, db);
+                this.exception = null;
+                this.totalOperations = 1;
+                this.totalOperationsTime = totalOperationsTime;
+                double seconds = totalOperationsTime / 1000.0;
+                if (seconds > 0L) {
+                    this.operationsPerSecond = totalOperations / seconds;
+                } else {
+                    this.operationsPerSecond = Double.MAX_VALUE;
+                }
+            } catch (RuntimeException e){
+                this.totalOperations = -1;
+                this.totalOperationsTime = -1;
+                this.operationsPerSecond = -1;
+                this.exception = e;
             }
         }
     }

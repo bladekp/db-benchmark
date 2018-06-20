@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import pl.bladekp.dbbenchmark.dao.DaoJdbc;
 
+import java.sql.SQLException;
+
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -15,11 +17,16 @@ public class DataAccessServiceTest {
 
     @Test
     public void shouldExecuteAndReturnExecutionTime() {
-        //Arrange
-        Mockito.doNothing().when(daoJdbc).execute(null);
+        long time = -1;
+        try {
+            //Arrange
+            Mockito.doNothing().when(daoJdbc).execute(null);
 
-        //Act
-        long time = das.executeBenchmark(null);
+            //Act
+            time = das.executeBenchmark(null);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
 
         //Assert
         assertTrue(time >= 0);

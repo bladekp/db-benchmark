@@ -42,11 +42,7 @@ public class DaoJdbc implements Dao {
     }
 
     @Override
-    public void execute(String query) {
-        try {
-            dataSource.getConnection().createStatement().execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void execute(String query) throws SQLException {
+        dataSource.getConnection().createStatement().execute(query);
     }
 }

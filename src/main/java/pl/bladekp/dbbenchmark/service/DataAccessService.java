@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import pl.bladekp.dbbenchmark.dao.DaoJdbc;
 import pl.bladekp.dbbenchmark.dao.DaoMongo;
 
+import java.sql.SQLException;
+
 @Component
 public class DataAccessService {
 
@@ -17,13 +19,13 @@ public class DataAccessService {
         this.daoMongo = daoMongo;
     }
 
-    public long executeBenchmark(String query) {
+    public long executeBenchmark(String query) throws SQLException {
         long startTime = System.currentTimeMillis();
         daoJdbc.execute(query);
         return System.currentTimeMillis() - startTime;
     }
 
-    public void execute(String query) {
+    public void execute(String query) throws SQLException {
         daoJdbc.execute(query);
     }
 
