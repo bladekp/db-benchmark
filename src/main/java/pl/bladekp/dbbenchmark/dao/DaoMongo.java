@@ -29,6 +29,6 @@ public class DaoMongo implements Dao {
 
     @Override
     public void execute(String query) {
-
+        //mongoTemplate.
     }
 }
