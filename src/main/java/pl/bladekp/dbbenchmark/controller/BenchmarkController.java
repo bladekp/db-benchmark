@@ -35,11 +35,11 @@ public class BenchmarkController {
     @Transactional
     @RequestMapping(value = "/benchmark", method = RequestMethod.POST, produces = "application/json")
     public String prepareBenchmarkReport(HttpServletRequest request, Model model) {
-        model.addAttribute("timeMap", executeBenchmark(request.getParameter("sql"), Integer.valueOf(request.getParameter("count"))));
+        model.addAttribute("timeMap", executeBenchmark(request.getParameter("sql"), request.getParameter("mql"), Integer.valueOf(request.getParameter("count"))));
         return "benchmark-report";
     }
 
-    private Map<ClientDatabaseContextHolder.ClientDatabaseEnum, BenchmarkStatistics> executeBenchmark(final String query, final int count) {
+    private Map<ClientDatabaseContextHolder.ClientDatabaseEnum, BenchmarkStatistics> executeBenchmark(final String sql, final String mql, final int count) {
         return IntStream
                 .range(0, count)
                 .mapToObj((i) -> {
@@ -47,7 +47,7 @@ public class BenchmarkController {
                     Stream
                             .of(ClientDatabaseContextHolder.ClientDatabaseEnum.values())
                             .filter(ClientDatabaseContextHolder.ClientDatabaseEnum::isEnabled)
-                            .forEach(db ->  map.put(db, new BenchmarkStatistics(db, query)));
+                            .forEach(db ->  map.put(db, new BenchmarkStatistics(db, sql, mql)));
                     return map;
                 })
                 .reduce(
@@ -87,11 +87,11 @@ public class BenchmarkController {
             }
         }
 
-        private BenchmarkStatistics(ClientDatabaseContextHolder.ClientDatabaseEnum db, String query){
+        private BenchmarkStatistics(ClientDatabaseContextHolder.ClientDatabaseEnum db, String sql, String mql){
             try {
                 long totalOperationsTime = ClientDatabaseContextHolder.execute(() -> {
                     try {
-                        return dataAccessService.executeBenchmark(query);
+                        return dataAccessService.executeBenchmark(sql, mql, db);
                     } catch (SQLException e){
                         throw new RuntimeException(e);
                     }

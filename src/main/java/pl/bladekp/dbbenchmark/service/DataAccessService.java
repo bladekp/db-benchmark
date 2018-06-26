@@ -2,6 +2,7 @@ package pl.bladekp.dbbenchmark.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.bladekp.dbbenchmark.config.ClientDatabaseContextHolder;
 import pl.bladekp.dbbenchmark.dao.DaoJdbc;
 import pl.bladekp.dbbenchmark.dao.DaoMongo;
 
@@ -19,9 +20,13 @@ public class DataAccessService {
         this.daoMongo = daoMongo;
     }
 
-    public long executeBenchmark(String query) throws SQLException {
+    public long executeBenchmark(String sql, String mql, ClientDatabaseContextHolder.ClientDatabaseEnum db) throws SQLException {
         long startTime = System.currentTimeMillis();
-        daoJdbc.execute(query);
+        if (db == ClientDatabaseContextHolder.ClientDatabaseEnum.MONGO){
+            daoMongo.execute(mql);
+        } else {
+            daoJdbc.execute(sql);
+        }
         return System.currentTimeMillis() - startTime;
     }
 

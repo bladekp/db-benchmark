@@ -21,7 +21,8 @@ public class Country {
     private String name;
 
     @Column
-    private Continent continent;
+    //private Continent continent;
+    private Integer continent;
 
     @Column
     private String region;
@@ -39,10 +40,10 @@ public class Country {
     private Double lifeExpectancy;
 
     @Column
-    private double gnp;
+    private Double gnp;
 
     @Column
-    private double gnpOld;
+    private Double gnpOld;
 
     @Column
     private String localName;

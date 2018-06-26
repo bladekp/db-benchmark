@@ -3,9 +3,9 @@ package pl.bladekp.dbbenchmark.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ScriptOperations;
+import org.springframework.data.mongodb.core.script.ExecutableMongoScript;
 import org.springframework.stereotype.Repository;
-
-import java.sql.SQLException;
 
 @Repository
 public class DaoMongo implements Dao {
@@ -29,6 +29,8 @@ public class DaoMongo implements Dao {
 
     @Override
     public void execute(String query) {
-        //mongoTemplate.
+        ScriptOperations scriptOps = mongoTemplate.scriptOps();
+        ExecutableMongoScript echoScript = new ExecutableMongoScript(query);
+        scriptOps.execute(echoScript);
     }
 }

@@ -2,6 +2,7 @@ package pl.bladekp.dbbenchmark.service;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import pl.bladekp.dbbenchmark.config.ClientDatabaseContextHolder;
 import pl.bladekp.dbbenchmark.dao.DaoJdbc;
 
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ public class DataAccessServiceTest {
             Mockito.doNothing().when(daoJdbc).execute(null);
 
             //Act
-            time = das.executeBenchmark(null);
+            time = das.executeBenchmark(null, null, ClientDatabaseContextHolder.ClientDatabaseEnum.H2);
         } catch (SQLException e){
             e.printStackTrace();
         }
