@@ -6,7 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class E2ETest {
+public class FlowITCase {
 
     @Test
     public void testFlow() {
