@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-    <table>
+    <table id="report-table">
         <thead>
             <tr>
                 <td>Database</td>
@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="dbTime : ${timeMap}">
+            <tr th:each="dbTime : ${timeMap}" th:id="${dbTime.key}">
                 <td th:text="${dbTime.key}"></td>
                 <td th:text="${dbTime.value}"></td>
             </tr>

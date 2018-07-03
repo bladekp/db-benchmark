@@ -91,6 +91,11 @@
             <artifactId>ojdbc8</artifactId>
             <version>12.2.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.13.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -24,6 +24,6 @@ public class DatabasesConfigTest {
 
         //Assert
         assertNotNull(ds);
-        assertEquals(Mockito.mockingDetails(dataSourceCreator).getInvocations().size(), 4);
+        assertEquals(Mockito.mockingDetails(dataSourceCreator).getInvocations().size(), 1);
     }
 }
