@@ -8,7 +8,7 @@
     * mysql
     * postgresql
     * oracle
-    * <s>mongodb (not supported yet)</s>
+    * mongodb
 2. Setup application settings
 
 # Run
@@ -36,13 +36,18 @@
     mvn cobertura:cobertura
 
 and open /target/site/cobertura/index.html in browser
+
+3. Integration tests
+
+   mvn verify
     
 # Todo
 
-* mongodb
-* integration test in roboto or selenium
+* mongodb queries
 
-#Convert SQL inserts into mongo 
+# Scratchpad
+
+## Convert SQL inserts into mongo 
 
     while read line; do 
         data=`echo $line | cut -d'(' -f3`; 
